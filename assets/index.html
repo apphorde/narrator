@@ -39,6 +39,7 @@
                 <a class="underline underline-offset-2" download id="link">
                   <span id="uid" class="block text-sm text-gray-500"></span>
                 </a>
+                <audio id="audioplayer"></audio>
               </p>
             </div>
           </div>
@@ -56,8 +57,10 @@
           try {
             e.preventDefault();
             const r = await tts(input.value);
-            link.href = URL.createObjectURL(new Blob([await r.arrayBuffer()]));
-            uid.innerText = link.href;
+            const blob = new Blob([await r.arrayBuffer()]);
+            const href = URL.createObjectURL(blob);
+            uid.innerText = link.href = href
+             audioplayer.srcObject = blob;
           } catch (e) {
             console.log(e);
           }
