@@ -36,8 +36,9 @@
                 </button>
               </form>
               <p class="text-xs text-gray-500 dark:text-gray-400">
-                <a class="underline underline-offset-2" id="link"> Download </a>
+                <a class="underline underline-offset-2" id="link">
                 <span id="uid" class="block text-sm text-gray-500"></span>
+                </a>
               </p>
             </div>
           </div>
@@ -46,13 +47,15 @@
     </div>
     <script type="module">
      import tts from "https://tts.jsfn.run/index.mjs"
+     window.addEventListener('DOMContentLoaded', () => {
      const f = document.querySelector('form')
      f.onsubmit = async (e) => {
       e.preventDefault()
       const r = await tts(input.value)
       link.href = URL.createObjectUrl(new Blob(await r.arrayBuffer()))
       uid.innerText = link.href;
-     }
+     };
+    });
     </script>
   </body>
 </html>
