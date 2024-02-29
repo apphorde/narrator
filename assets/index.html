@@ -47,13 +47,19 @@
     </div>
     <script type="module">
      import tts from "https://tts.jsfn.run/index.mjs"
+
+     console.log = (...args) => document.body.innerHTML += JSON.stringify(args);
      window.addEventListener('DOMContentLoaded', () => {
      const f = document.querySelector('form')
      f.onsubmit = async (e) => {
+      try {
       e.preventDefault()
       const r = await tts(input.value)
       link.href = URL.createObjectUrl(new Blob(await r.arrayBuffer()))
       uid.innerText = link.href;
+      } catch (e) {
+        console.log(e)
+      }
      };
     });
     </script>
