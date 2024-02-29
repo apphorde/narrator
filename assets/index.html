@@ -10,59 +10,67 @@
     />
   </head>
   <body>
-    <div class="flex items-center justify-around h-screen w-screen">
-      <section class="w-full py-12 md:py-24 lg:py-32 xl:py-48">
-        <div class="container px-4 md:px-6">
-          <div class="flex flex-col items-center space-y-4 text-center">
-            <div class="space-y-2">
-              <h1
-                class="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none"
-              >
-                Text to audio with one click
-              </h1>
-            </div>
-            <div class="w-full max-w-sm space-y-2">
-              <form class="flex space-x-2">
-                <input
-                  type="text"
-                  id="input"
-                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 max-w-lg flex-1"
-                  placeholder="Text to narrate"
-                /><button
-                  class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-gray-900 text-white hover:bg-primary/90 h-10 px-4 py-2"
-                  type="submit"
-                >
-                  Speak
-                </button>
-              </form>
-              <p class="text-xs text-gray-500 dark:text-gray-400">
-                <a class="underline underline-offset-2" download filename="audio.mp3" id="link">
-                  <span id="uid" class="block text-sm text-gray-500"></span>
-                </a>
-                <audio id="audioplayer"></audio>
-              </p>
-            </div>
-          </div>
+    <section class="flex items-center justify-around h-screen w-screen">
+      <div class="container mx-auto max-w-md">
+        <h1
+          class="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8 text-center"
+        >
+          Text to audio in one click
+        </h1>
+        <form class="flex mb-6">
+          <input
+            type="text"
+            id="input"
+            class="h-10 w-full rounded-l-md border border-gray-400 bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            placeholder="Text to narrate"
+          /><button
+            class="whitespace-nowrap rounded-r-md text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-gray-900 text-white hover:bg-black h-10 px-4 py-2"
+            type="submit"
+          >
+            Narrate
+          </button>
+        </form>
+        <div
+          class="text-xs text-gray-500 dark:text-gray-400 hidden"
+          id="audiofile"
+        >
+          <a
+            class="underline underline-offset-2 block text-gray-700"
+            download
+            filename="audio.mp3"
+            id="link"
+            >Download</a
+          >
+          <audio class="mt-6 w-full" id="audioplayer"></audio>
         </div>
-      </section>
-    </div>
+        <div id="error"></div>
+      </div>
+    </section>
     <script type="module">
       import tts from "https://tts.jsfn.run/index.mjs";
 
-      console.log = (...args) =>
-        (document.body.innerHTML += String(args) + JSON.stringify(args));
       window.addEventListener("DOMContentLoaded", () => {
-        const f = document.querySelector("form");
-        f.onsubmit = async (e) => {
+        document.querySelector("form").onsubmit = async (e) => {
+          e.preventDefault();
+
           try {
-            e.preventDefault();
+            audiofile.classList.add("hidden");
             const r = await tts(input.value);
-            const blob = new Blob([await r.arrayBuffer()], { type: 'audio/mp3' });
+
+            if (!r.ok) {
+              throw new Error("Narrator failed");
+            }
+
+            const blob = new Blob([await r.arrayBuffer()], {
+              type: "audio/mp3",
+            });
             const href = URL.createObjectURL(blob);
-            uid.innerText = link.href = href;
-            audioplayer.src = href;
+
+            link.href = audioplayer.src = href;
             audioplayer.controls = true;
+            audiofile.classList.remove("hidden");
           } catch (e) {
+            error.innerText = String(e);
             console.log(e);
           }
         };
