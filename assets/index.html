@@ -56,7 +56,7 @@
           try {
             e.preventDefault();
             const r = await tts(input.value);
-            link.href = URL.createObjectUrl(new Blob(await r.arrayBuffer()));
+            link.href = URL.createObjectUrl(new Blob([await r.arrayBuffer()]));
             uid.innerText = link.href;
           } catch (e) {
             console.log(e);
