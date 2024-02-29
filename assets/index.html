@@ -57,7 +57,7 @@
           try {
             e.preventDefault();
             const r = await tts(input.value);
-            const blob = new Blob([await r.arrayBuffer()]);
+            const blob = new Blob([await r.arrayBuffer()], { type: 'audio/mp3' });
             const href = URL.createObjectURL(blob);
             uid.innerText = link.href = href;
             audioplayer.src = href;
