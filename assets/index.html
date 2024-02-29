@@ -61,6 +61,7 @@
             const href = URL.createObjectURL(blob);
             uid.innerText = link.href = href;
             audioplayer.src = href;
+            audioplayer.controls = true;
           } catch (e) {
             console.log(e);
           }
