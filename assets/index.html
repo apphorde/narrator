@@ -47,7 +47,7 @@
      f.onsubmit = async (e) => {
       e.preventDefault()
       const r = await tts(input.value)
-      link.href = URL.createObjectUrl(new Blob([await r.arrayBuffer()]))
+      link.href = URL.createObjectUrl(new Blob(await r.arrayBuffer()))
      }
     </script>
   </body>
